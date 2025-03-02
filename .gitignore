@@ -8,7 +8,7 @@ build/
 venv/
 
 # Jupyter Notebooks
-.ipynb
+*.ipynb
 .ipynb_checkpoints/
 
 # Environment variables
