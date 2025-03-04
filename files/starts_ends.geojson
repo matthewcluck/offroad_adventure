@@ -1,0 +1,13 @@
+{
+"type": "FeatureCollection",
+"name": "starts_ends",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:EPSG::4269" } },
+"features": [
+{ "type": "Feature", "properties": { "id": 1, "start": 1, "end": 0, "Info": "Day 1 Start", "Day": 1 }, "geometry": { "type": "Point", "coordinates": [ -109.525590834267078, 38.569711556518186 ] } },
+{ "type": "Feature", "properties": { "id": 2, "start": 0, "end": 1, "Info": "Day 1 End", "Day": 1 }, "geometry": { "type": "Point", "coordinates": [ -109.535103989123442, 38.607432601753992 ] } },
+{ "type": "Feature", "properties": { "id": 3, "start": 1, "end": 0, "Info": "Day 2 Start", "Day": 2 }, "geometry": { "type": "Point", "coordinates": [ -109.590276407763284, 38.556470379548337 ] } },
+{ "type": "Feature", "properties": { "id": 4, "start": 0, "end": 1, "Info": "Day 2 End", "Day": 2 }, "geometry": { "type": "Point", "coordinates": [ -109.612467303216249, 38.53206607714398 ] } },
+{ "type": "Feature", "properties": { "id": 5, "start": 1, "end": 0, "Info": "Day 3 Start", "Day": 3 }, "geometry": { "type": "Point", "coordinates": [ -109.641807613038353, 38.614643154402501 ] } },
+{ "type": "Feature", "properties": { "id": 6, "start": 0, "end": 1, "Info": "Day 3 End", "Day": 3 }, "geometry": { "type": "Point", "coordinates": [ -109.637484711326678, 38.608329088286915 ] } }
+]
+}
