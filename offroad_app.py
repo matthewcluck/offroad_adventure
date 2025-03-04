@@ -6,7 +6,29 @@ import os
 from dotenv import load_dotenv
 import psycopg2
 
-st.title('Moab 3 Day Offroad Adventure Guide aa')
+st.markdown("""
+    <style>
+
+        .block-container {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+        }
+
+        #map_div {
+            width: 100% !important;
+            max-width: 1200px !important;
+            border: 10px solid black;
+        }
+            
+        .stMainBlockContainer.block-container {
+            padding: 20px !important;
+        }
+
+    </style>
+""", unsafe_allow_html=True)
+
+st.markdown("<h1 style='text-align: center; color: black;'>Moab 3 Day Offroad Adventure Guide</h1>", unsafe_allow_html=True)
 
 # Connect to postgis database
 load_dotenv()
@@ -16,7 +38,6 @@ DATABASE_URL = os.getenv("DB_URL")
 def get_db_connection():
     return psycopg2.connect(DATABASE_URL)
 
-# Establish connection
 conn = get_db_connection()
 
 @st.cache_data
@@ -29,7 +50,6 @@ def load_geodata():
         "starts_ends": "SELECT * FROM starts_ends"
     }
 
-    # Read data from PostgreSQL
     moab_offroad_trails_gdf = gpd.read_postgis(sql_queries["moab_offroad_trails"], con=conn, geom_col='combined_geometry')
     national_parks_gdf = gpd.read_postgis(sql_queries["national_parks"], con=conn, geom_col='geometry')
     moab_fuel_stations_gdf = gpd.read_postgis(sql_queries["moab_fuel_stations"], con=conn, geom_col='geometry')
@@ -38,7 +58,6 @@ def load_geodata():
 
     return moab_offroad_trails_gdf, national_parks_gdf, moab_fuel_stations_gdf, blm_gdf, starts_ends_gdf
 
-# Load the data
 moab_offroad_trails_gdf, national_parks_gdf, moab_fuel_stations_gdf, blm_gdf, starts_ends_gdf = load_geodata()
 
 # Filter trails by day
@@ -51,8 +70,9 @@ day_2_trails = moab_offroad_trails_gdf[moab_offroad_trails_gdf["name"].isin(day_
 day_3_trail_names = ["Little Canyon", "Great Escape", "Arth's Corner", "Bull Canyon Road", "Rusty Nail", "Gold Bar Rim"]
 day_3_trails = moab_offroad_trails_gdf[moab_offroad_trails_gdf["name"].isin(day_3_trail_names)]
 
-m = folium.Map(location=[38.60, -109.55], zoom_start=11, control_scale=True)
+m = folium.Map(location=[38.60, -109.58], zoom_start=12, control_scale=True)
 
+# Adding various layers to the map
 folium.GeoJson(
     blm_gdf,
     name="BLM Recreation Sites",
@@ -89,9 +109,12 @@ folium.GeoJson(
     style_function=lambda feature: {"color": "orange", "weight": 5}
 ).add_to(m)
 
+national_parks_gdf["Info"] = "Arches National Park: No offroading allowed."
+
 folium.GeoJson(
     national_parks_gdf,
     name="National Parks",
+    tooltip=folium.GeoJsonTooltip(fields=["Info"]),
     style_function=lambda feature: {
         "fillColor": "red",
         "color": "red",
@@ -121,6 +144,39 @@ folium.GeoJson(
         "weight": 6
     }
 ).add_to(m)
+
 folium.LayerControl().add_to(m)
 
-st_folium(m, 1000)
+col1, col2, col3 = st.columns([2, 9, 2])
+
+# Define the legend HTML to be displayed in the second column
+legend_html = '''
+    <div style="background-color: lightgray; border: 3px solid black; padding: 10px; font-size: 14px;">
+        <b style="font-size: 20px;">Adventure Map Reference</b><br>
+        <i style="background-color: purple; width: 20px; height: 10px; display: inline-block;"></i> Day 1 Trails<br>
+        <i style="background-color: yellow; width: 20px; height: 10px; display: inline-block;"></i> Day 2 Trails<br>
+        <i style="background-color: orange; width: 20px; height: 10px; display: inline-block;"></i> Day 3 Trails<br>
+        <i style="background-color: lightgray; width: 12px; height: 12px; display: inline-block; border: 1px solid black;"></i> Bureau of Land Management Rec Site<br>
+        <i style="background-color: lightcoral; width: 12px; height: 12px; display: inline-block; border: 1px solid black;"></i> Arches National Park<br>
+        <i style="background-color: black; width: 8px; height: 8px; display: inline-block; border-radius: 50%;"></i> Gas Station
+    </div>
+'''
+
+
+description_html = '''
+    <div style="background-color: lightgray; border: 3px solid black; padding: 10px; font-size: 14px;">
+        <b style="font-size: 20px;">Welcome to your adventure!</b><br>
+        <idisplay: inline-block;"></i>blah blah blah<br>
+    </div>
+'''
+
+# Display the map in the first column
+with col1:
+    st.markdown(description_html, unsafe_allow_html=True)
+
+# Display legend in the second column
+with col2:
+    st_folium(m, width='100%')
+
+with col3:
+    st.markdown(legend_html, unsafe_allow_html=True)
