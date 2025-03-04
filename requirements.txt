@@ -1,0 +1,6 @@
+dotenv==0.9.9
+folium==0.19.5
+geopandas==1.0.1
+psycopg2==2.9.10
+streamlit==1.42.2
+streamlit_folium==0.24.0

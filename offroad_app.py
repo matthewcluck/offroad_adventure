@@ -9,6 +9,10 @@ import psycopg2
 st.markdown("""
     <style>
 
+        body {
+            background-color: #f8f8f8 !important;  /* Off-white color */
+        }
+
         .block-container {
             padding: 0 !important;
             margin: 0 !important;
@@ -18,6 +22,7 @@ st.markdown("""
         #map_div {
             width: 100% !important;
             max-width: 1200px !important;
+            max-height: 900px !important;
             border: 10px solid black;
         }
             
@@ -159,6 +164,9 @@ legend_html = '''
         <i style="background-color: lightgray; width: 12px; height: 12px; display: inline-block; border: 1px solid black;"></i> Bureau of Land Management Rec Site<br>
         <i style="background-color: lightcoral; width: 12px; height: 12px; display: inline-block; border: 1px solid black;"></i> Arches National Park<br>
         <i style="background-color: black; width: 8px; height: 8px; display: inline-block; border-radius: 50%;"></i> Gas Station
+        <br><br>
+        <idisplay: inline-block;"></i>Application developed by Matthew Cluck using open source data
+        from OpenStreetMap, National Park Service, and Bureau of Land Management.<br>
     </div>
 '''
 
@@ -166,7 +174,13 @@ legend_html = '''
 description_html = '''
     <div style="background-color: lightgray; border: 3px solid black; padding: 10px; font-size: 14px;">
         <b style="font-size: 20px;">Welcome to your adventure!</b><br>
-        <idisplay: inline-block;"></i>blah blah blah<br>
+        <idisplay: inline-block;"></i>Please use this map to guide you on your three day offroad journey around
+        Moab, Utah. Use the legend to identify which trails to ride on each day. You can also click the
+        trails to see individual names, surface types, and the length of that trail. Use the blue waypoints
+        as a guide for where to start your ride and where to finish. If you need to gas up, use the black dots
+        as a reference to find a gas station. The gray areas of land show the name of the Bureau of Land Management
+        Recreation Site when you hover your mouse. Use that to further research interesting sites, rules and regulations of the
+        area. Finally, in red shows Arches National Park. That is off limits for offroading. Have fun!<br>
     </div>
 '''
 
