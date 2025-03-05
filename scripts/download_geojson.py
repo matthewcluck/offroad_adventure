@@ -14,7 +14,7 @@ sql_query_trails = 'SELECT * FROM moab_offroad_trails'
 sql_query_national_parks = "SELECT * FROM national_parks WHERE unit_name = 'Arches National Park'"
 sql_query_fuel = "SELECT * FROM moab_fuel_stations"
 sql_points_of_interest = "SELECT * FROM points_of_interest"
-sql_blm = "SELECT * FROM blm_ut_rec_sites"
+sql_blm = "SELECT * FROM blm_ut_rec_sites WHERE \"FET_NAME\" IN ('Canyon Rims','South Moab','Colorado Riverway', 'Labyrinth Rims / Gemini Bridges')"
 sql_starts_ends = "SELECT * FROM starts_ends"
 
 moab_offroad_trails_gdf = gpd.read_postgis(sql_query_trails, con=DATABASE_URL, geom_col='combined_geometry')

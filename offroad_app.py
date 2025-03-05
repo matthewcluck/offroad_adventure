@@ -4,7 +4,6 @@ import folium
 from streamlit_folium import st_folium
 import os
 from dotenv import load_dotenv
-import psycopg2
 
 st.markdown("""
     <style>
