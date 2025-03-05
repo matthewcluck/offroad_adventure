@@ -34,45 +34,30 @@ st.markdown("""
 
 st.markdown("<h1 style='text-align: center; color: black;'>Moab 3 Day Offroad Adventure Guide</h1>", unsafe_allow_html=True)
 
-# Connect to postgis database
-load_dotenv()
-DATABASE_URL = os.getenv("DB_URL")
-
-@st.cache_resource
-def get_db_connection():
-    return psycopg2.connect(DATABASE_URL)
-
-conn = get_db_connection()
-
 @st.cache_data
-def load_geodata():
-    sql_queries = {
-        "moab_offroad_trails": "SELECT * FROM moab_offroad_trails",
-        "national_parks": "SELECT * FROM national_parks WHERE unit_name = 'Arches National Park'",
-        "moab_fuel_stations": "SELECT * FROM moab_fuel_stations",
-        "blm_ut_rec_sites": "SELECT * FROM blm_ut_rec_sites WHERE \"FET_NAME\" IN ('Canyon Rims','South Moab','Colorado Riverway', 'Labyrinth Rims / Gemini Bridges')",
-        "starts_ends": "SELECT * FROM starts_ends"
-    }
+def load_geojson():
+    # URLs to the GeoJSON files in your GitHub repository
+    day_1_trails_url = "https://raw.githubusercontent.com/matthewcluck/offroad_adventure/refs/heads/main/geojson/day_1_trails.geojson"
+    day_2_trails_url = "https://raw.githubusercontent.com/matthewcluck/offroad_adventure/refs/heads/main/geojson/day_2_trails.geojson"
+    day_3_trails_url = "https://raw.githubusercontent.com/matthewcluck/offroad_adventure/refs/heads/main/geojson/day_3_trails.geojson"
+    national_parks_url = "https://raw.githubusercontent.com/matthewcluck/offroad_adventure/refs/heads/main/geojson/national_parks.geojson"
+    moab_fuel_stations_url = "https://raw.githubusercontent.com/matthewcluck/offroad_adventure/refs/heads/main/geojson/moab_fuel_stations.geojson"
+    blm_url = "https://raw.githubusercontent.com/matthewcluck/offroad_adventure/refs/heads/main/geojson/blm.geojson"
+    starts_ends_url = "https://raw.githubusercontent.com/matthewcluck/offroad_adventure/refs/heads/main/geojson/starts_ends.geojson"
+    
+    # Load GeoJSON files from GitHub URLs
+    day_1_trails = gpd.read_file(day_1_trails_url)
+    day_2_trails = gpd.read_file(day_2_trails_url)
+    day_3_trails = gpd.read_file(day_3_trails_url)
+    national_parks_gdf = gpd.read_file(national_parks_url)
+    moab_fuel_stations_gdf = gpd.read_file(moab_fuel_stations_url)
+    blm_gdf = gpd.read_file(blm_url)
+    starts_ends_gdf = gpd.read_file(starts_ends_url)
 
-    moab_offroad_trails_gdf = gpd.read_postgis(sql_queries["moab_offroad_trails"], con=conn, geom_col='combined_geometry')
-    national_parks_gdf = gpd.read_postgis(sql_queries["national_parks"], con=conn, geom_col='geometry')
-    moab_fuel_stations_gdf = gpd.read_postgis(sql_queries["moab_fuel_stations"], con=conn, geom_col='geometry')
-    blm_gdf = gpd.read_postgis(sql_queries["blm_ut_rec_sites"], con=conn, geom_col='geometry')
-    starts_ends_gdf = gpd.read_postgis(sql_queries["starts_ends"], con=conn, geom_col='geom')
+    return day_1_trails, day_2_trails, day_3_trails, national_parks_gdf, moab_fuel_stations_gdf, blm_gdf, starts_ends_gdf
 
-    return moab_offroad_trails_gdf, national_parks_gdf, moab_fuel_stations_gdf, blm_gdf, starts_ends_gdf
-
-moab_offroad_trails_gdf, national_parks_gdf, moab_fuel_stations_gdf, blm_gdf, starts_ends_gdf = load_geodata()
-
-# Filter trails by day
-day_1_trail_names = ["Slickrock", "Slickrock Cutoff", "Slickrock Alternate", "Staircase", "Hell's Revenge 4x4 Trail"]
-day_1_trails = moab_offroad_trails_gdf[moab_offroad_trails_gdf["name"].isin(day_1_trail_names)]
-
-day_2_trail_names = ["Poison Spider", "Golden Spike", "Portal Trail"]
-day_2_trails = moab_offroad_trails_gdf[moab_offroad_trails_gdf["name"].isin(day_2_trail_names)]
-
-day_3_trail_names = ["Little Canyon", "Great Escape", "Arth's Corner", "Bull Canyon Road", "Rusty Nail", "Gold Bar Rim"]
-day_3_trails = moab_offroad_trails_gdf[moab_offroad_trails_gdf["name"].isin(day_3_trail_names)]
+# Load the data
+day_1_trails, day_2_trails, day_3_trails, national_parks_gdf, moab_fuel_stations_gdf, blm_gdf, starts_ends_gdf = load_geojson()
 
 m = folium.Map(location=[38.60, -109.58], zoom_start=12, control_scale=True)
 
